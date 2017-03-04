@@ -1,0 +1,28 @@
+{
+    "name": "mindkomm/commonmark-searchhighlight-extension",
+    "description": "Extension for CommonMark PHP implementation to higlight search strings in Markdown files",
+    "type": "library",
+    "keywords": ["markdown", "commonmark", "search", "highlight"],
+    "homepage": "https://github.com/mindkomm/commonmark-searchhighlight-extension",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Mind\\CommonMark\\SearchHighlightExtension\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Lukas Gaechter",
+            "email": "lukas.gaechter@mind.ch",
+            "role": "Developer"
+        },
+        {
+            "name": "MIND",
+            "homepage": "https://www.mind.ch"
+        }
+    ],
+    "require": {
+        "php": "^5.5|^7.0",
+        "league/commonmark": "^0.15"
+    }
+}
