@@ -1,6 +1,6 @@
 {
     "name": "mindkomm/commonmark-searchhighlight-extension",
-    "description": "Extension for CommonMark PHP implementation to higlight search strings in Markdown files",
+    "description": "Extension for CommonMark PHP implementation to highlight search strings in Markdown files",
     "type": "library",
     "keywords": ["markdown", "commonmark", "search", "highlight"],
     "homepage": "https://github.com/mindkomm/commonmark-searchhighlight-extension",
