@@ -28,8 +28,9 @@ class SpanRenderer implements InlineRendererInterface
         }
 
         $attrs = [];
+
         foreach ($inline->getData('attributes', []) as $key => $value) {
-            $attrs[$key] = $htmlRenderer->escape($value, true);
+            $attrs[$key] = $value;
         }
 
         return new HtmlElement('span', $attrs, $htmlRenderer->renderInlines($inline->children()));

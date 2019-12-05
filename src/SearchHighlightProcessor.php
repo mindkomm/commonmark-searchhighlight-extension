@@ -2,11 +2,8 @@
 
 namespace Mind\CommonMark\SearchHighlightExtension;
 
-use League\CommonMark\Block\Element\Document;
-use League\CommonMark\DocumentProcessorInterface;
+use League\CommonMark\Event\DocumentParsedEvent;
 use League\CommonMark\Inline\Element\Text;
-use League\CommonMark\Util\Configuration;
-use League\CommonMark\Util\ConfigurationAwareInterface;
 use Mind\CommonMark\SearchHighlightExtension\Inline\Element\InlineContainer;
 use Mind\CommonMark\SearchHighlightExtension\Inline\Element\Span;
 
@@ -15,34 +12,31 @@ use Mind\CommonMark\SearchHighlightExtension\Inline\Element\Span;
  *
  * @package Mind\CommonMark\SearchHighlightExtension
  */
-class SearchHighlightProcessor implements DocumentProcessorInterface, ConfigurationAwareInterface
+class SearchHighlightProcessor
 {
     /**
-     * @var Configuration
-     */
-    private $config;
+	 * Search String.
+	 *
+	 * @var string
+	 */
+	private $searchstring;
 
-    /**
-     * @param Configuration $configuration
-     */
-    public function setConfiguration(Configuration $configuration)
-    {
-        $this->config = $configuration;
+    public function __construct($searchstring) {
+    	$this->searchstring = $searchstring;
     }
 
     /**
-     * @param Document $document
-     *
      * @return void
      */
-    public function processDocument(Document $document)
+    public function onDocumentParsed(DocumentParsedEvent $event)
     {
-        $walker = $document->walker();
+	    $document = $event->getDocument();
+	    $walker   = $document->walker();
 
-        while ($event = $walker->next()) {
-            $node = $event->getNode();
+        while ($nodeEvent = $walker->next()) {
+            $node = $nodeEvent->getNode();
 
-            if ( ! $event->isEntering() || $node->isContainer()) {
+            if ( ! $nodeEvent->isEntering() || $node->isContainer()) {
                 continue;
             }
 
@@ -50,11 +44,10 @@ class SearchHighlightProcessor implements DocumentProcessorInterface, Configurat
                 continue;
             }
 
-            $content      = $node->getContent();
-            $searchstring = $this->config->getConfig('searchstring');
+            $content = $node->getContent();
 
-            if (preg_match_all("/($searchstring)/im", $content, $matches, PREG_SET_ORDER)) {
-                $partials = preg_split("/($searchstring)/im", $content);
+            if (preg_match_all("/($this->searchstring)/im", $content, $matches, PREG_SET_ORDER)) {
+                $partials = preg_split("/($this->searchstring)/im", $content);
 
                 $container  = new InlineContainer();
                 $matchcount = count($matches);

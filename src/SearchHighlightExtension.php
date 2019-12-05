@@ -2,7 +2,9 @@
 
 namespace Mind\CommonMark\SearchHighlightExtension;
 
-use League\CommonMark\Extension\Extension;
+use League\CommonMark\ConfigurableEnvironmentInterface;
+use League\CommonMark\Event\DocumentParsedEvent;
+use League\CommonMark\Extension\ExtensionInterface;
 use Mind\CommonMark\SearchHighlightExtension\Inline\Renderer\InlineContainerRenderer;
 use Mind\CommonMark\SearchHighlightExtension\Inline\Renderer\SpanRenderer;
 
@@ -11,20 +13,28 @@ use Mind\CommonMark\SearchHighlightExtension\Inline\Renderer\SpanRenderer;
  *
  * @package Mind\CommonMark\SearchHighlightExtension
  */
-class SearchHighlightExtension extends Extension
+class SearchHighlightExtension implements ExtensionInterface
 {
-    public function getInlineRenderers()
-    {
-        return [
-            __NAMESPACE__.'\\Inline\Element\Span'            => new SpanRenderer(),
-            __NAMESPACE__.'\\Inline\Element\InlineContainer' => new InlineContainerRenderer(),
-        ];
-    }
+	/**
+	 * Search String.
+	 *
+	 * @var string
+	 */
+	private $searchstring;
 
-    public function getDocumentProcessors()
+	public function __construct($searchstring = '')
+	{
+		$this->searchstring = $searchstring;
+	}
+
+	public function register(ConfigurableEnvironmentInterface $environment)
     {
-        return [
-            new SearchHighlightProcessor(),
-        ];
+    	$searchHighlightProcessor = new SearchHighlightProcessor($this->searchstring);
+
+		$environment
+			->addEventListener( DocumentParsedEvent::class, [$searchHighlightProcessor, 'onDocumentParsed'] )
+            ->addInlineRenderer(__NAMESPACE__.'\\Inline\Element\Span', new SpanRenderer(), 0)
+            ->addInlineRenderer(__NAMESPACE__.'\\Inline\Element\InlineContainer', new InlineContainerRenderer(), 0)
+        ;
     }
 }

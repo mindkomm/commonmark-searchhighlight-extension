@@ -30,10 +30,8 @@ $config = [];
 $environment = Environment::createCommonMarkEnvironment();
 
 if (!empty($searchstring)) {
-    $environment->addExtension(new SearchHighlightExtension());
-
-    // Pass the search string to the environment config
-    $config['searchstring'] = $searchstring;
+    // Pass the search string to the constructor.
+    $environment->addExtension(new SearchHighlightExtension($searchstring));
 }
 
 $converter = new CommonMarkConverter($config, $environment);

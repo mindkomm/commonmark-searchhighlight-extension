@@ -23,6 +23,6 @@
     ],
     "require": {
         "php": "^5.5|^7.0",
-        "league/commonmark": "^0.15"
+        "league/commonmark": "^1.0"
     }
 }
